@@ -14,6 +14,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Prevent wallet injection errors
+              if (typeof window !== 'undefined' && !window.ethereum) {
+                window.ethereum = undefined;
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="bg-white dark:bg-gray-900">
         <ThemeProvider
           attribute="class"
