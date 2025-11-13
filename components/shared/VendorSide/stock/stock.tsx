@@ -24,24 +24,106 @@ type Product = {
 };
 
 export default function StockTable() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Chicken Breast",
-      image: "/imageAssets/meat.png",
-      category: "Meat",
-      stock: "50 kg",
-      price: "₱180/kg",
-    },
-    {
-      id: 2,
-      name: "Pork Belly",
-      image: "/imageAssets/meat.png",
-      category: "Meat",
-      stock: "30 kg",
-      price: "₱250/kg",
-    },
-  ]);
+  const [products, setProducts] = useState<Product[]>(
+    [
+      {
+        id: 1,
+        name: "Chicken Breast",
+        image: "/imageAssets/meat.png",
+        category: "Meat",
+        stock: "50 kg",
+        price: "₱180/kg",
+      },
+      {
+        id: 2,
+        name: "Pork Belly",
+        image: "/imageAssets/meat.png",
+        category: "Meat",
+        stock: "30 kg",
+        price: "₱250/kg",
+      },
+      {
+        id: 3,
+        name: "Ground Beef",
+        image: "/imageAssets/meat.png",
+        category: "Meat",
+        stock: "25 kg",
+        price: "₱280/kg",
+      },
+      {
+        id: 4,
+        name: "Fresh Tomatoes",
+        image: "/imageAssets/meat.png",
+        category: "Fresh Produce",
+        stock: "40 kg",
+        price: "₱50/kg",
+      },
+      {
+        id: 5,
+        name: "Red Onions",
+        image: "/imageAssets/meat.png",
+        category: "Fresh Produce",
+        stock: "35 kg",
+        price: "₱80/kg",
+      },
+      {
+        id: 6,
+        name: "Potatoes",
+        image: "/imageAssets/meat.png",
+        category: "Fresh Produce",
+        stock: "60 kg",
+        price: "₱45/kg",
+      },
+      {
+        id: 7,
+        name: "Potato Chips",
+        image: "/imageAssets/meat.png",
+        category: "Chips",
+        stock: "100 pcs",
+        price: "₱25/pc",
+      },
+      {
+        id: 8,
+        name: "Corn Chips",
+        image: "/imageAssets/meat.png",
+        category: "Chips",
+        stock: "80 pcs",
+        price: "₱30/pc",
+      },
+      {
+        id: 9,
+        name: "Frozen Fish Fillet",
+        image: "/imageAssets/meat.png",
+        category: "Frozen Goods",
+        stock: "45 kg",
+        price: "₱200/kg",
+      },
+      {
+        id: 10,
+        name: "Frozen Mixed Vegetables",
+        image: "/imageAssets/meat.png",
+        category: "Frozen Goods",
+        stock: "50 packs",
+        price: "₱120/pack",
+      },
+      {
+        id: 11,
+        name: "T-Shirt",
+        image: "/imageAssets/meat.png",
+        category: "Clothing",
+        stock: "30 pcs",
+        price: "₱150/pc",
+      },
+      {
+        id: 12,
+        name: "Jeans",
+        image: "/imageAssets/meat.png",
+        category: "Clothing",
+        stock: "20 pcs",
+        price: "₱450/pc",
+      },
+    ]
+  );
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -142,21 +224,21 @@ export default function StockTable() {
                     className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
                   />
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 max-w-[200px]">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
                         width={20}
                         height={20}
-                        className="rounded"
+                        className="rounded shrink-0"
                       />
                     ) : (
-                      <div className="w-5 h-5 bg-gray-200 rounded flex items-center justify-center">
+                      <div className="w-5 h-5 bg-gray-200 rounded flex items-center justify-center shrink-0">
                         <span className="text-[8px] text-gray-400">No img</span>
                       </div>
                     )}
-                    <span>{product.name}</span>
+                    <span className="truncate">{product.name}</span>
                   </div>
                 )}
               </TableCell>
@@ -243,7 +325,7 @@ export default function StockTable() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>

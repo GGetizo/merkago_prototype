@@ -1,9 +1,11 @@
-
+import CustomerFeedback from "@/components/shared/VendorSide/home/feedback/feedback";
+import OrdersComponent from "@/components/shared/VendorSide/home/orders/order";
 
 export default function Home() {
   return (
-    <div className="bg-[#FFFFFF] h-screen w-full">
-
+    <div className="bg-[#FFFFFF] min-h-screen pb-16">
+      <OrdersComponent />
+      <CustomerFeedback />
     </div>
   );
 }
