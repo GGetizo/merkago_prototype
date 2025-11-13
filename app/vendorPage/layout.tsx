@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import BottomNavbar from "@/components/shared/VendorSide/navbarVendor";
+import LocationHeader from "@/components/shared/VendorSide/headerbarVendor";
 
 export const metadata: Metadata = {
   title: "MerkaGo",
@@ -14,11 +15,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-      
+      <div className="sticky top-0 z-50">
+        <LocationHeader 
+          addressLine1="Pasig City, Philippines"
+          addressLine2="Metro Manila"
+        />
+      </div>
         <main>
         {children}
         </main>
-       
+        <BottomNavbar/>
       </body>
     </html>
   );
