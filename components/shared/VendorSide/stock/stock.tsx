@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { Trash2, Plus, X, Pencil, Check } from "lucide-react";
+import { Trash2, Plus, X, Pencil, Check, Upload } from "lucide-react";
 import { useState } from "react";
 import AddProductModal from "./addProductModal/addProductModal";
 
@@ -188,10 +188,21 @@ export default function StockTable() {
     setEditedProduct(null);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && editedProduct) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedProduct({ ...editedProduct, image: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Products</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Products</h2>
         <button
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 bg-[#7FC354] text-white px-4 py-2 rounded-lg hover:bg-[#6fa844] transition-colors"
@@ -202,7 +213,7 @@ export default function StockTable() {
       </div>
 
       <Table>
-        <TableCaption className="text-xs">A list of your product stock.</TableCaption>
+        <TableCaption className="text-xs dark:text-gray-400">A list of your product stock.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="text-xs">Product</TableHead>
@@ -217,24 +228,52 @@ export default function StockTable() {
             <TableRow key={product.id}>
               <TableCell className="text-xs font-medium">
                 {editingId === product.id ? (
-                  <input
-                    type="text"
-                    value={editedProduct?.name}
-                    onChange={(e) => setEditedProduct({ ...editedProduct!, name: e.target.value })}
-                    className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
-                  />
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="relative w-20 h-20 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden group cursor-pointer">
+                        {editedProduct?.image ? (
+                          <Image
+                            src={editedProduct.image}
+                            alt={editedProduct.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                            <Upload size={24} className="text-gray-400" />
+                          </div>
+                        )}
+                        <label className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+                          <Upload size={20} className="text-white" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={editedProduct?.name}
+                        onChange={(e) => setEditedProduct({ ...editedProduct!, name: e.target.value })}
+                        className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
+                      />
+                    </div>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">Click image to change</p>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-2 max-w-[200px]">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
-                        width={20}
-                        height={20}
-                        className="rounded shrink-0"
+                        width={40}
+                        height={40}
+                        className="rounded object-cover shrink-0"
                       />
                     ) : (
-                      <div className="w-5 h-5 bg-gray-200 rounded flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center shrink-0">
                         <span className="text-[8px] text-gray-400">No img</span>
                       </div>
                     )}
@@ -247,7 +286,7 @@ export default function StockTable() {
                   <select
                     value={editedProduct?.category}
                     onChange={(e) => setEditedProduct({ ...editedProduct!, category: e.target.value })}
-                    className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
+                    className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>
@@ -265,7 +304,7 @@ export default function StockTable() {
                     type="text"
                     value={editedProduct?.stock}
                     onChange={(e) => setEditedProduct({ ...editedProduct!, stock: e.target.value })}
-                    className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
+                    className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
                   />
                 ) : (
                   product.stock
@@ -277,7 +316,7 @@ export default function StockTable() {
                     type="text"
                     value={editedProduct?.price}
                     onChange={(e) => setEditedProduct({ ...editedProduct!, price: e.target.value })}
-                    className="w-full px-2 py-1 text-xs border border-gray-300 rounded text-right focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
+                    className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded text-right focus:outline-none focus:ring-1 focus:ring-[#7FC354]"
                   />
                 ) : (
                   product.price
@@ -326,20 +365,20 @@ export default function StockTable() {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>
-              <button onClick={cancelDelete} className="text-gray-400 hover:text-gray-600">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Confirm Delete</h3>
+              <button onClick={cancelDelete} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                 <X size={20} />
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
               Are you sure you want to delete <span className="font-semibold">{productToDelete?.name}</span>? This action cannot be undone.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={cancelDelete}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>
