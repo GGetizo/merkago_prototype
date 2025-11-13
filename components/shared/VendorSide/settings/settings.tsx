@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -19,22 +20,25 @@ import {
 } from "lucide-react";
 
 export default function SettingsComponent() {
-  const [darkMode, setDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [orderAlerts, setOrderAlerts] = useState(true);
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [autoAcceptOrders, setAutoAcceptOrders] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
 
+  // Use theme resolution check instead of mounted state
+  const isDarkMode = theme === "dark";
+
   return (
     <div className="w-full p-4 space-y-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Settings</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Settings</h2>
 
       {/* Appearance */}
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            {darkMode ? <Moon className="size-5" /> : <Sun className="size-5" />}
+            {isDarkMode ? <Moon className="size-5" /> : <Sun className="size-5" />}
             <CardTitle>Appearance</CardTitle>
           </div>
           <CardDescription>Customize how your app looks</CardDescription>
@@ -45,7 +49,10 @@ export default function SettingsComponent() {
               <p className="text-sm font-medium">Dark Mode</p>
               <p className="text-xs text-muted-foreground">Switch between light and dark theme</p>
             </div>
-            <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+            <Switch 
+              checked={isDarkMode} 
+              onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} 
+            />
           </div>
         </CardContent>
       </Card>

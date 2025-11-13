@@ -14,7 +14,7 @@ export default function LocationHeader({
   shopLogoUrl = "/shopLogo/alingLita.png" // Default logo
 }: LocationHeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#7FC354] flex justify-between items-center p-4 rounded-b-2xl">
+    <header className="sticky top-0 z-50 w-full bg-[#7FC354] dark:bg-[#6fa844] flex justify-between items-center p-4 rounded-b-2xl">
 
       {/* 1. Shop Name Section with Logo (LEFT) */}
       <button className="shrink-0 flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
@@ -25,7 +25,7 @@ export default function LocationHeader({
           height={40} 
           className="rounded-full"
         />
-        <p className="text-xs font-bold text-gray-900 max-w-[60px] min-[391px]:max-w-[150px] truncate">
+        <p className="text-xs font-bold text-gray-900 dark:text-white max-w-[60px] min-[391px]:max-w-[150px] truncate">
           {shopName}
         </p>
       </button>
@@ -38,10 +38,10 @@ export default function LocationHeader({
       {/* 3. Notification and Message Icons (RIGHT) */}
       <div className="flex items-center gap-4">
         <button className="hover:opacity-80 transition-opacity cursor-pointer">
-          <Bell size={20} className="text-gray-900" />
+          <Bell size={20} className="text-gray-900 dark:text-white" />
         </button>
         <button className="hover:opacity-80 transition-opacity cursor-pointer">
-          <MessageCircle size={20} className="text-gray-900" />
+          <MessageCircle size={20} className="text-gray-900 dark:text-white" />
         </button>
       </div>
     </header>

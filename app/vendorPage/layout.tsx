@@ -13,19 +13,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <div className="min-h-screen flex flex-col">
       <div className="sticky top-0 z-50">
         <LocationHeader 
           addressLine1="Pasig City, Philippines"
           addressLine2="Metro Manila"
         />
       </div>
-        <main>
+      <div className="flex-1">
         {children}
-        </main>
-        <BottomNavbar/>
-      </body>
-    </html>
+      </div>
+      <BottomNavbar/>
+    </div>
   );
 }
