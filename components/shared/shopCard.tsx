@@ -21,8 +21,7 @@ export default function ShopCard({
         <Image
           src={imageUrl}
           alt={name}
-          layout="fill"
-          objectFit="cover" // Use 'cover' to fill the container
+          fill
           className="rounded-xl"
         />
       </div>

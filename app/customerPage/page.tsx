@@ -8,7 +8,7 @@ import { Search, ArrowRight } from "lucide-react";
 // --- Category Data (for the icons) ---
 const categories = [
   { name: "Meat", img: "/imageAssets/meat.png" }, // Replace with your image paths
-  { name: "Fresh Produce", img: "/imageAssets/freshproduce.jpg" },
+  { name: "Fresh Produce", img: "/imageAssets/freshproduce.png" },
   { name: "Frozen Goods", img: "/imageAssets/frozengoods.png" },
   { name: "Clothing", img: "/imageAssets/clothe.png" },
 ];

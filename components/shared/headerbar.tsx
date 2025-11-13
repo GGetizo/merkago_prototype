@@ -9,10 +9,10 @@ type LocationHeaderProps = {
 
 export default function LocationHeader({ addressLine1, addressLine2 }: LocationHeaderProps) {
   return (
-    <header className="w-full bg-[#7FC354] flex justify-between items-center p-4 rounded-b-2xl">
+    <header className="w-full bg-[#7FC354] flex items-center justify-between px-4 rounded-b-2xl">
 
     {/* 1. Logo Section (NEW) */}
-      <div className="shrink-0">
+      <div className="shrink-0 relative">
          <Image src="/imageAssets/MERKAGOLOGO.svg" alt="MerkaGo" width={70} height={10} />
       </div>
 
