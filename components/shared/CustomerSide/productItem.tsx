@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select"; // shadcn
 import { Label } from "@/components/ui/label"; // shadcn
 import { Input } from "@/components/ui/input"; // shadcn
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 // --- Props Definition ---
 type ProductItemCardProps = {
@@ -41,13 +42,13 @@ export default function ProductItemCard({
 }: ProductItemCardProps) {
   // State for all possible options.
   // We'll only show the ones that are relevant.
-  const [cut, setCut] = useState<string | undefined>(undefined);
-  const [weight, setWeight] = useState<string | undefined>(undefined);
-  const [unitValue, setUnitValue] = useState<string | undefined>(undefined);
-  const [part, setPart] = useState<string | undefined>(undefined);
-  const [quantity, setQuantity] = useState<number>(1);
-  const [otherCut, setOtherCut] = useState<string>("");
-  const [note, setNote] = useState<string>("");
+  const [cut, setCut] = useState("");
+  const [weight, setWeight] = useState("1");
+  const [unitValue, setUnitValue] = useState("kg");
+  const [part, setPart] = useState("");
+  const [quantity, setQuantity] =  useState("1");
+  const [otherCut, setOtherCut] = useState("");
+  const [note, setNote] = useState("");
 
   // This function renders the dynamic options using shadcn components
   const renderOptions = () => {
@@ -96,14 +97,13 @@ export default function ProductItemCard({
           {/* UPDATED: Weight Input + Unit Select */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="weight" className="text-right">
-              Weight
+              Quantity
             </Label>
             <div className="col-span-3 grid grid-cols-3 gap-2">
               <Input
                 id="weight"
                 type="number"
                 placeholder="e.g. 1"
-                defaultValue={1}
                 className="col-span-2"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
@@ -159,14 +159,13 @@ export default function ProductItemCard({
           {/* UPDATED: Weight Input + Unit Select */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="weight" className="text-right">
-              Weight
+              Quantity
             </Label>
             <div className="col-span-3 grid grid-cols-3 gap-2">
               <Input
                 id="weight"
                 type="number"
                 placeholder="e.g. 1"
-                defaultValue={1}
                 className="col-span-2"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
@@ -197,6 +196,52 @@ export default function ProductItemCard({
         </div>
       );
     }
+
+        // fish sub category
+    if (category === "Meat" && subCategory === "Fish") {
+      return (
+        <div className="space-y-4">
+          {/* UPDATED: Weight Input + Unit Select */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="weight" className="text-right">
+              Quantity
+            </Label>
+            <div className="col-span-3 grid grid-cols-3 gap-2">
+              <Input
+                id="weight"
+                type="number"
+                placeholder="e.g. 1"
+                className="col-span-2"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+              />
+              <Select onValueChange={setUnitValue} value={unitValue} defaultValue="kg">
+                <SelectTrigger>
+                  <SelectValue placeholder="Unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="kg">kg</SelectItem>
+                  <SelectItem value="lbs">lbs</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="note" className="text-right">
+              Note
+            </Label>
+            <Input
+              id="note"
+              placeholder="Special Request"
+              className="col-span-3"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </div>
+        </div>
+      );
+    }
+
 
     // Vegetable sub category
     if (category === "Produce" && subCategory === "Vegetable") {
@@ -239,7 +284,7 @@ export default function ProductItemCard({
           id="quantity"
           type="number"
           value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          onChange={(e) => setQuantity(e.target.value)}
           min={1}
           className="col-span-3"
         />
@@ -310,6 +355,7 @@ export default function ProductItemCard({
 
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>{name}</DialogTitle>
+          <DialogDescription>{price}</DialogDescription>
         </DialogHeader>
 
         {/* Modal Body (Dynamic Options) */}
