@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <div className="flex-1 h-screen ">
+      <div className="flex-1 h-screen bg-white dark:bg-gray-900">
       <LocationHeader 
         addressLine1="Pasig City, Philippines"
         addressLine2="Metro Manila"

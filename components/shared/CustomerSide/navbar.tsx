@@ -10,9 +10,12 @@ import {
   Ticket,
   ReceiptText,
   Handshake,
+  Moon,
+  Sun,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import {
   Sheet,
   SheetContent,
@@ -21,6 +24,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import CartItems from "./cartItems";
 
 // Reusable NavItem for normal links
@@ -59,11 +63,14 @@ export default function BottomNavbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
+  const { theme, setTheme } = useTheme();
+  
+  const isDarkMode = theme === "dark";
 
   return (
     <>
       {/* Bottom Navbar */}
-      <nav className="fixed bottom-0 left-0 z-50 w-full bg-white border-t border-gray-200">
+      <nav className="fixed bottom-0 left-0 z-50 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
         <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-4">
           {/* HOME */}
           <NavItem
@@ -83,21 +90,21 @@ export default function BottomNavbar() {
           >
             <div
               className={`text-2xl ${
-                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500"
+                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
               <ShoppingCart />
             </div>
             <span
               className={`text-xs ${
-                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500"
+                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
               Cart
             </span>
           </button>
 
-          {/* CART BUTTON (no link) */}
+          {/* PROFILE BUTTON (no link) */}
           <button
             onClick={() => {
               setProfileOpen(true);
@@ -106,14 +113,14 @@ export default function BottomNavbar() {
           >
             <div
               className={`text-2xl ${
-                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500"
+                activeTab === "profile" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
               <User />
             </div>
             <span
               className={`text-xs ${
-                activeTab === "cart" ? "text-[#7FC354]" : "text-gray-500"
+                activeTab === "profile" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
               Profile
@@ -222,9 +229,21 @@ export default function BottomNavbar() {
 
           {/* GENERAL SECTION */}
           <div className="px-4 mt-6">
-            <h2 className="font-semibold text-gray-700 mb-2">General</h2>
+            <h2 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">General</h2>
 
             <div className="space-y-3">
+              {/* Dark Mode Toggle */}
+              <div className="w-full flex justify-between items-center py-3 border-b">
+                <span className="flex items-center gap-2">
+                  {isDarkMode ? <Moon /> : <Sun />}
+                  Dark Mode
+                </span>
+                <Switch 
+                  checked={isDarkMode} 
+                  onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} 
+                />
+              </div>
+
               <button className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <CircleQuestionMark /> Help center

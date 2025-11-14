@@ -139,8 +139,8 @@ const bannerAds = [
 
 export default function Home() {
   return (
-    // We add pb-16 for the BottomNavbar
-    <div className="bg-[#FFFFFF] min-h-screen pb-16 xl:px-7">
+    // Changed bg-[#FFFFFF] to bg-white dark:bg-gray-900
+    <div className="bg-white dark:bg-gray-900 min-h-screen pb-16 xl:px-7">
 
       {/* 2. SEARCH BAR */}
       <div className="px-4 mb-6 mt-4">
@@ -151,7 +151,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Looking for something?"
-            className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-full border-none focus:ring-2 focus:ring-[#7FC354]"
+            className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 dark:text-gray-100 rounded-full border-none focus:ring-2 focus:ring-[#7FC354]"
           />
         </div>
       </div>
@@ -161,11 +161,11 @@ export default function Home() {
         <div className="flex justify-between items-center px-4 mb-3">
           {categories.map((cat) => (
             <div key={cat.name} className="flex flex-col items-center w-1/4">
-              <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 rounded-xl flex items-center justify-center">
-                <div className="w-full h-full bg-gray-300 rounded-md"></div>
+              <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+                <div className="w-full h-full bg-gray-300 dark:bg-gray-700 rounded-md"></div>
                 <Image src={cat.img} width={60} height={60} alt={cat.name} />
               </div>
-              <p className="mt-2 xl:text-sm text-[0.5rem] font-semibold text-gray-900">
+              <p className="mt-2 xl:text-sm text-[0.5rem] font-semibold text-gray-900 dark:text-gray-100">
                 {cat.name}
               </p>
             </div>
@@ -175,10 +175,10 @@ export default function Home() {
             href="#"
             className="flex flex-col items-center w-1/4"
           >
-            <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 rounded-xl flex items-center justify-center">
-              <ArrowRight size={24} className="text-gray-600" />
+            <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+              <ArrowRight size={24} className="text-gray-600 dark:text-gray-400" />
             </div>
-            <p className="mt-2 xl:text-sm text-[0.5rem] font-semibold text-gray-900">
+            <p className="mt-2 xl:text-sm text-[0.5rem] font-semibold text-gray-900 dark:text-gray-100">
               View all shops
             </p>
           </a>
@@ -210,7 +210,7 @@ export default function Home() {
 
       {/* 4. POPULAR SHOPS SECTION */}
       <section className="mb-6">
-        <h2 className="font-bold text-xl px-4 mb-3 text-gray-900">
+        <h2 className="font-bold text-xl px-4 mb-3 text-gray-900 dark:text-gray-100">
           Popular Shops
         </h2>
         {/* Horizontal scroll container */}
@@ -231,7 +231,7 @@ export default function Home() {
 
       {/* 5. NEW: ALL SHOPS & PRODUCTS SECTION */}
       <section className="px-4">
-        <h2 className="font-bold text-xl mb-3 text-gray-900">
+        <h2 className="font-bold text-xl mb-3 text-gray-900 dark:text-gray-100">
           All Shops
         </h2>
         {/* This loop renders each shop and its products together.
