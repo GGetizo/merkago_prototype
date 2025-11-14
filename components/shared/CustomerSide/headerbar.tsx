@@ -1,4 +1,4 @@
-import { MapPin, Heart } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 // Define the props our component will accept

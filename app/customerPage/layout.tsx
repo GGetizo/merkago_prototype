@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import BottomNavbar from "@/components/shared/navbar";
-import LocationHeader from "@/components/shared/headerbar";
+import BottomNavbar from "@/components/shared/CustomerSide/navbar";
+import LocationHeader from "@/components/shared/CustomerSide/headerbar";
 
 export const metadata: Metadata = {
   title: "MerkaGo",
@@ -13,8 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+      <div className="flex-1 h-screen ">
       <LocationHeader 
         addressLine1="Pasig City, Philippines"
         addressLine2="Metro Manila"
@@ -23,7 +22,6 @@ export default function RootLayout({
         {children}
         </main>
         <BottomNavbar/>
-      </body>
-    </html>
+      </div>
   );
 }
