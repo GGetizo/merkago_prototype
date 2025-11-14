@@ -187,8 +187,7 @@ export default function Home() {
                   <Image
                     src={ad.imageUrl}
                     alt={ad.alt}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
                     className="rounded-xl"
                   />
                 </div>

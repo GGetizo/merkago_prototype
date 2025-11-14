@@ -303,8 +303,7 @@ export default function ProductItemCard({
           <Image
             src={imageUrl}
             alt={name}
-            layout="fill"
-            objectFit="cover" // 'cover' fills the container
+            fill
             className="rounded-t-md"
           />
         </div>
