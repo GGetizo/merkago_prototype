@@ -2,7 +2,7 @@
 import ShopCard from "@/components/shared/CustomerSide/shopCard";
 import ShopListItem from "@/components/shared/CustomerSide/shopListItems";
 import Image from "next/image";
-// And icons from lucide-react
+import Link from "next/link";
 import { Search, ArrowRight } from "lucide-react";
 import {
   Carousel,
@@ -65,6 +65,7 @@ const shopsWithProducts = [
         imageUrl: "/imageAssets/karne.png",
         name: "Karne ng Baka",
         price: "₱ 200.00/kg",
+        badge: "30% Off",
         category: "Meat",
         subCategory: "Beef"
       },
@@ -102,6 +103,14 @@ const shopsWithProducts = [
         price: "₱ 190.00/kg",
         category: "Meat",
         subCategory: "Beef"
+      },
+            {
+        id: 'ar3',
+        imageUrl: "/imageAssets/bangus.jpg",
+        name: "Bangus",
+        price: "₱ 200.00/kg",
+        category: "Meat",
+        subCategory: "Fish"
       }
     ]
   }
@@ -206,6 +215,7 @@ export default function Home() {
         </h2>
         {/* Horizontal scroll container */}
         <div className="flex overflow-x-auto pb-4 pl-4">
+          <Link href="/customerPage/shopProfile" className="flex">
           {popularShops.map((shop) => (
             <ShopCard
               key={shop.name}
@@ -215,6 +225,7 @@ export default function Home() {
               deliveryTime={shop.deliveryTime}
             />
           ))}
+          </Link>
         </div>
       </section>
 

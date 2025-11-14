@@ -21,6 +21,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import CartItems from "./cartItems";
 
 // Reusable NavItem for normal links
 function NavItem({
@@ -131,9 +132,10 @@ export default function BottomNavbar() {
             </SheetDescription>
           </SheetHeader>
 
-          <div className="border-gray-500 h-full w-[80%] border-2 rounded-md p-4 ml-8 flex justify-center items-center">
-            {/* Your cart content goes here */}
-            <p className="flex justify-center">Cart is empty.</p>
+          <div className="border-gray-500 h-full w-[90%] border-2 rounded-md ml-6 flex">
+            <div className="w-full">
+              <CartItems />
+              </div>
           </div>
         </SheetContent>
       </Sheet>
@@ -171,10 +173,10 @@ export default function BottomNavbar() {
 
           {/* QUICK ACTIONS */}
           <div className="grid grid-cols-3 gap-3 px-4 mb-4">
-            <button className="border rounded-lg p-4 flex flex-col items-center">
+            <Link href="/customerPage/order" className="border rounded-lg p-4 flex flex-col items-center">
               <ReceiptText className="mb-1" />
               <span className="text-sm">Orders</span>
-            </button>
+            </Link>
 
             <button className="border rounded-lg p-4 flex flex-col items-center">
               <User className="mb-1" />
