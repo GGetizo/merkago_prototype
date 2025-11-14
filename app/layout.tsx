@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BottomNavbar from "@/components/shared/navbar";
-import LocationHeader from "@/components/shared/headerbar";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "MerkaGo",
@@ -14,16 +13,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-      <LocationHeader 
-        addressLine1="Pasig City, Philippines"
-        addressLine2="Metro Manila"
-      />
-        <main>
-        {children}
-        </main>
-        <BottomNavbar/>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Prevent wallet injection errors
+              if (typeof window !== 'undefined' && !window.ethereum) {
+                window.ethereum = undefined;
+              }
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-white dark:bg-gray-900">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );
