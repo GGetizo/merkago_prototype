@@ -327,7 +327,6 @@ export default function ProductItemCard({
                 src={imageUrl}
                 alt={name}
                 fill
-                objectFit="contain"
               />
             </div>
           </div>
