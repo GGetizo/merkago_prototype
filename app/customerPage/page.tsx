@@ -15,7 +15,7 @@ import ProductItemCard from "@/components/shared/CustomerSide/productItem";
 
 // --- Category Data (for the icons) ---
 const categories = [
-  { name: "Meat", img: "/imageAssets/meat.png" }, // Replace with your image paths
+  { name: "Meat", img: "/imageAssets/meat-removebg.png" }, // Replace with your image paths
   { name: "Fresh Produce", img: "/imageAssets/freshproduce.png" },
   { name: "Frozen Goods", img: "/imageAssets/frozengoods.png" },
   { name: "Clothing", img: "/imageAssets/clothe.png" },
