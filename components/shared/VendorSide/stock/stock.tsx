@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { Trash2, Plus, X, Pencil, Check, Upload, ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddProductModal from "./addProductModal/addProductModal";
 
 type Product = {
@@ -23,7 +24,56 @@ type Product = {
   price: string;
 };
 
+const CategorySkeleton = () => {
+  return (
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+      <div className="p-4 bg-gray-50 dark:bg-gray-800">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-5 w-5" />
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-5 w-10 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProductRowSkeleton = () => {
+  return (
+    <TableRow>
+      <TableCell className="text-xs">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-10 w-10 rounded" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </TableCell>
+      <TableCell className="text-xs">
+        <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell className="text-xs">
+        <Skeleton className="h-4 w-16" />
+      </TableCell>
+      <TableCell className="text-xs">
+        <Skeleton className="h-4 w-12" />
+      </TableCell>
+      <TableCell className="text-xs">
+        <Skeleton className="h-4 w-16" />
+      </TableCell>
+      <TableCell className="text-xs">
+        <Skeleton className="h-4 w-12" />
+      </TableCell>
+      <TableCell className="text-right">
+        <div className="flex gap-2 justify-end">
+          <Skeleton className="h-4 w-4" />
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
+
 export default function StockTable() {
+  const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>(
     [
       {
@@ -133,6 +183,15 @@ export default function StockTable() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const units = ["kg", "g", "pcs", "pack", "bundle", "dozen"];
+
+  useEffect(() => {
+    // Simulate loading delay
+    const loadTimeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(loadTimeout);
+  }, []);
 
   // Group products by category
   const productsByCategory = products.reduce((acc, product) => {
@@ -245,6 +304,7 @@ export default function StockTable() {
         <button
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 bg-[#7FC354] text-white px-4 py-2 rounded-lg hover:bg-[#6fa844] transition-colors"
+          disabled={isLoading}
         >
           <Plus size={16} />
           <span className="text-xs font-medium">Add Product</span>
@@ -252,7 +312,15 @@ export default function StockTable() {
       </div>
 
       <div className="space-y-4">
-        {Object.entries(productsByCategory).map(([category, categoryProducts]) => {
+        {isLoading ? (
+          <>
+            <CategorySkeleton />
+            <CategorySkeleton />
+            <CategorySkeleton />
+            <CategorySkeleton />
+          </>
+        ) : (
+          Object.entries(productsByCategory).map(([category, categoryProducts]) => {
           const isExpanded = expandedCategories.has(category);
           const productCount = categoryProducts.length;
 
@@ -483,7 +551,8 @@ export default function StockTable() {
               )}
             </div>
           );
-        })}
+        }))
+        }
       </div>
 
       {/* Delete Confirmation Modal */}

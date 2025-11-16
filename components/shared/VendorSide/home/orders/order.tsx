@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type OrderStatus = "Preparing" | "On the Way" | "Completed" | "Refunded";
 
@@ -75,8 +76,64 @@ const statusColors: Record<OrderStatus, string> = {
   "Refunded": "bg-red-100 text-red-700",
 };
 
+const OrderTableSkeleton = () => {
+  return (
+    <>
+      {[...Array(4)].map((_, index) => (
+        <TableRow key={index}>
+          <TableCell className="text-xs">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          </TableCell>
+          <TableCell className="text-xs">
+            <Skeleton className="h-4 w-full max-w-xs" />
+          </TableCell>
+          <TableCell className="text-xs">
+            <Skeleton className="h-4 w-32" />
+          </TableCell>
+          <TableCell className="text-xs">
+            <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell className="text-xs">
+            <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell className="text-xs">
+            <Skeleton className="h-6 w-24 rounded-full" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
+  );
+};
+
+const StatusCardSkeleton = () => {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-3 w-32 mt-2" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-8 w-12" />
+      </CardContent>
+    </Card>
+  );
+};
+
 export default function OrdersComponent() {
   const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading delay
+    const loadTimeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(loadTimeout);
+  }, []);
 
   const handleStatusChange = (orderId: number, newStatus: OrderStatus) => {
     setOrders(orders.map(order => 
@@ -90,7 +147,7 @@ export default function OrdersComponent() {
 
   return (
     <div className="w-full p-4 space-y-4">
-      <h2 className="text-xl font-bold text-gray-900">Today&apos;s Orders</h2>
+      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Today&apos;s Orders</h2>
 
 
 
@@ -113,7 +170,10 @@ export default function OrdersComponent() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {isLoading ? (
+                <OrderTableSkeleton />
+              ) : (
+                orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="text-xs">
                     <div className="flex items-center gap-2">
@@ -129,13 +189,13 @@ export default function OrdersComponent() {
                   <TableCell className="text-xs max-w-xs truncate">{order.items}</TableCell>
                   <TableCell className="text-xs max-w-xs">
                     {order.notes ? (
-                      <span className="italic text-gray-600">&quot;{order.notes}&quot;</span>
+                      <span className="italic text-gray-600 dark:text-gray-400">&quot;{order.notes}&quot;</span>
                     ) : (
-                      <span className="text-gray-400">No notes</span>
+                      <span className="text-gray-400 dark:text-gray-500">No notes</span>
                     )}
                   </TableCell>
                   <TableCell className="text-xs font-semibold">{order.total}</TableCell>
-                  <TableCell className="text-xs text-gray-600">{order.time}</TableCell>
+                  <TableCell className="text-xs text-gray-600 dark:text-gray-400">{order.time}</TableCell>
                   <TableCell className="text-xs">
                     <select
                       value={order.status}
@@ -149,7 +209,8 @@ export default function OrdersComponent() {
                     </select>
                   </TableCell>
                 </TableRow>
-              ))}
+              )))
+              }
             </TableBody>
           </Table>
         </CardContent>
@@ -157,45 +218,56 @@ export default function OrdersComponent() {
       
       {/* Order Status Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-blue-200">
-          <CardHeader>
-            <CardTitle className="text-sm">Preparing</CardTitle>
-            <CardDescription>Orders being prepared</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{getOrderCount("Preparing")}</div>
-          </CardContent>
-        </Card>
+        {isLoading ? (
+          <>
+            <StatusCardSkeleton />
+            <StatusCardSkeleton />
+            <StatusCardSkeleton />
+            <StatusCardSkeleton />
+          </>
+        ) : (
+          <>
+            <Card className="border-blue-200 dark:border-blue-800">
+              <CardHeader>
+                <CardTitle className="text-sm">Preparing</CardTitle>
+                <CardDescription>Orders being prepared</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">{getOrderCount("Preparing")}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="border-yellow-200">
-          <CardHeader>
-            <CardTitle className="text-sm">On the Way</CardTitle>
-            <CardDescription>Orders for delivery</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{getOrderCount("On the Way")}</div>
-          </CardContent>
-        </Card>
+            <Card className="border-yellow-200 dark:border-yellow-800">
+              <CardHeader>
+                <CardTitle className="text-sm">On the Way</CardTitle>
+                <CardDescription>Orders for delivery</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-yellow-600">{getOrderCount("On the Way")}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="border-green-200">
-          <CardHeader>
-            <CardTitle className="text-sm">Completed</CardTitle>
-            <CardDescription>Delivered orders</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{getOrderCount("Completed")}</div>
-          </CardContent>
-        </Card>
+            <Card className="border-green-200 dark:border-green-800">
+              <CardHeader>
+                <CardTitle className="text-sm">Completed</CardTitle>
+                <CardDescription>Delivered orders</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">{getOrderCount("Completed")}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="border-red-200">
-          <CardHeader>
-            <CardTitle className="text-sm">Refunded</CardTitle>
-            <CardDescription>Refunded orders</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{getOrderCount("Refunded")}</div>
-          </CardContent>
-        </Card>
+            <Card className="border-red-200 dark:border-red-800">
+              <CardHeader>
+                <CardTitle className="text-sm">Refunded</CardTitle>
+                <CardDescription>Refunded orders</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">{getOrderCount("Refunded")}</div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
      
