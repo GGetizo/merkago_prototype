@@ -270,7 +270,9 @@ export default function BottomNavbar() {
               className="w-full border rounded-lg py-3 font-semibold"
               variant="destructive"
             >
+              <Link href="/">
               Log out
+              </Link>
             </Button>
           </div>
 
