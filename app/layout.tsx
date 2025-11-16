@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "MerkaGo",
@@ -15,16 +16,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Prevent wallet injection errors
-              if (typeof window !== 'undefined' && !window.ethereum) {
-                window.ethereum = undefined;
-              }
-            `,
-          }}
-        />
       </head>
       <body className="bg-white dark:bg-gray-900">
         <ThemeProvider
@@ -34,6 +25,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main>{children}</main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
