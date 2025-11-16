@@ -316,7 +316,7 @@ export default function ProductItemCard({
       <DialogTrigger asChild>
         <div className="shrink-0 w-32 mr-3 text-left cursor-pointer">
           {/* Card Image Container */}
-          <div className="relative w-32 h-32 bg-white rounded-xl border border-gray-200 flex items-center justify-center mb-2">
+          <div className="relative w-32 h-32 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 flex items-center justify-center mb-2">
             {badge && (
               <span className="absolute top-2 left-2 bg-[#E91E63] text-white text-[10px] font-bold px-2 py-0.5 rounded-md z-10">
                 {badge}
@@ -333,8 +333,8 @@ export default function ProductItemCard({
           </div>
           {/* Text Details */}
           <div>
-            <p className="font-bold text-sm text-gray-900">{price}</p>
-            <p className="text-xs text-gray-500 line-clamp-2 leading-tight">
+            <p className="font-bold text-sm text-gray-900 dark:text-gray-100">{price}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-tight">
               {name}
             </p>
           </div>
