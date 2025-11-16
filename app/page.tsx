@@ -171,7 +171,7 @@ export default function Home() {
                   Facebook
                 </Button>
 
-                <Button className="flex-1 bg-white hover:bg-[#F3F3F3] border py-2 rounded flex items-center justify-center gap-2">
+                <Button className="flex-1 bg-white hover:bg-[#F3F3F3] text-black border py-2 rounded flex items-center justify-center gap-2">
                   <Image
                     src="/imageAssets/googlelogo.png"
                     alt="Google"
