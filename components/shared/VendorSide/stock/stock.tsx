@@ -784,6 +784,7 @@ export default function StockTable() {
         showConfirmationModal={showConfirmationModal}
         onClosePayment={() => setShowPaymentModal(false)}
         onCloseConfirmation={() => setShowConfirmationModal(false)}
+        onOpenConfirmation={() => setShowConfirmationModal(true)}
         onSubscribeSuccess={() => setIsSubscribed(true)}
         paymentMethods={paymentMethods}
       />

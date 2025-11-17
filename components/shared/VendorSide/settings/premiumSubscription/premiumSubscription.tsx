@@ -34,6 +34,7 @@ interface PremiumSubscriptionProps {
   showManageSubscriptionModal: boolean;
   onClosePayment: () => void;
   onCloseConfirmation: () => void;
+  onOpenConfirmation: () => void;
   onCloseManageSubscription: () => void;
   onSubscribeSuccess: () => void;
   onCancelSuccess: () => void;
@@ -46,6 +47,7 @@ export default function PremiumSubscription({
   showManageSubscriptionModal,
   onClosePayment,
   onCloseConfirmation,
+  onOpenConfirmation,
   onCloseManageSubscription,
   onSubscribeSuccess,
   onCancelSuccess,
@@ -65,6 +67,9 @@ export default function PremiumSubscription({
       return;
     }
     onClosePayment();
+    setTimeout(() => {
+      onOpenConfirmation();
+    }, 100);
   };
 
   const handleSubscribe = async () => {
@@ -301,7 +306,7 @@ export default function PremiumSubscription({
 
       {/* Manage Subscription Modal */}
       <Dialog open={showManageSubscriptionModal} onOpenChange={onCloseManageSubscription}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[50vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
               <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30">

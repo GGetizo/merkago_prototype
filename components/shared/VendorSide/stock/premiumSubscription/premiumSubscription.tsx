@@ -33,6 +33,7 @@ interface PremiumSubscriptionProps {
   showConfirmationModal: boolean;
   onClosePayment: () => void;
   onCloseConfirmation: () => void;
+  onOpenConfirmation: () => void;
   onSubscribeSuccess: () => void;
   paymentMethods: PaymentMethod[];
 }
@@ -42,6 +43,7 @@ export default function PremiumSubscription({
   showConfirmationModal,
   onClosePayment,
   onCloseConfirmation,
+  onOpenConfirmation,
   onSubscribeSuccess,
   paymentMethods
 }: PremiumSubscriptionProps) {
@@ -59,6 +61,9 @@ export default function PremiumSubscription({
       return;
     }
     onClosePayment();
+    setTimeout(() => {
+      onOpenConfirmation();
+    }, 100);
   };
 
   const handleSubscribe = async () => {
