@@ -27,6 +27,13 @@ const mockCart: CartItem[] = [
     qty: 2,
     image: "/imageAssets/manok.jpg",
   },
+    {
+    id: 3,
+    name: "Bangus",
+    price: 200,
+    qty: 2,
+    image: "/imageAssets/bangus.jpg",
+  },
 ];
 
 export default function CartItems() {
@@ -58,7 +65,7 @@ export default function CartItems() {
             {/* DETAILS */}
             <div>
               <p className="font-semibold">{item.name}</p>
-              <p className="text-sm text-gray-600">₱{item.price}</p>
+              <p className="text-sm text-gray-600">₱{item.price}/kg</p>
               <p className="text-xs text-gray-400">Qty: {item.qty}</p>
             </div>
           </div>

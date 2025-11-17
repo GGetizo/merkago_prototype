@@ -66,6 +66,8 @@ const shopsWithProducts = [
         name: "Karne ng Baka",
         price: "₱ 200.00/kg",
         badge: "30% Off",
+        rating: "4.3",
+        sold: "300",
         category: "Meat",
         subCategory: "Beef"
       },
@@ -74,6 +76,8 @@ const shopsWithProducts = [
         imageUrl: "/imageAssets/manok.jpg",
         name: "Manok",
         price: "₱ 180.00/kg",
+        rating: "3.3",
+        sold: "400",
         category: "Meat",
         subCategory: "Chicken"
       }
@@ -93,6 +97,8 @@ const shopsWithProducts = [
         name: "Sibuyas",
         price: "₱ 53.00/kg",
         badge: "Deal",
+        rating: "4.2",
+        sold: "200",
         category: "Produce",
         subCategory: "Vegetable"
       },
@@ -101,6 +107,8 @@ const shopsWithProducts = [
         imageUrl: "/imageAssets/karne.png",
         name: "Baka (Ground)",
         price: "₱ 190.00/kg",
+        rating: "4.5",
+        sold: "700",
         category: "Meat",
         subCategory: "Beef"
       },
@@ -109,6 +117,8 @@ const shopsWithProducts = [
         imageUrl: "/imageAssets/bangus.jpg",
         name: "Bangus",
         price: "₱ 200.00/kg",
+        rating: "4.8",
+        sold: "600",
         category: "Meat",
         subCategory: "Fish"
       }
@@ -160,8 +170,8 @@ export default function Home() {
       <section className="mb-6">
         <div className="flex justify-between items-center px-4 mb-3">
           {categories.map((cat) => (
-            <div key={cat.name} className="flex flex-col items-center w-1/4">
-              <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+            <div key={cat.name} className="flex flex-col items-center w-1/4"> 
+              <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 rounded-xl flex items-center justify-center cursor-pointer">
                 <div className="w-full h-full bg-gray-300 dark:bg-gray-700 rounded-md"></div>
                 <Image src={cat.img} width={60} height={60} alt={cat.name} />
               </div>
@@ -175,7 +185,7 @@ export default function Home() {
             href="#"
             className="flex flex-col items-center w-1/4"
           >
-            <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+            <div className="xl:w-20 xl:h-20 w-15 h-15 p-3 bg-gray-100 hover:bg-gray-200 cursor-pointer dark:bg-gray-800 rounded-xl flex items-center justify-center">
               <ArrowRight size={24} className="text-gray-600 dark:text-gray-400" />
             </div>
             <p className="mt-2 xl:text-sm text-[0.5rem] font-semibold text-gray-900 dark:text-gray-100">
@@ -256,6 +266,8 @@ export default function Home() {
                     imageUrl={item.imageUrl}
                     name={item.name}
                     price={item.price}
+                    sold={item.sold}
+                    rating={item.rating}
                     badge={item.badge}
                     category={item.category}
                     subCategory={item.subCategory}

@@ -12,6 +12,7 @@ import {
   Handshake,
   Moon,
   Sun,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -25,7 +26,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import CartItems from "./cartItems";
+import CartItems from "./cartItems"; // Assuming this is where your CartItems component is
 
 // Reusable NavItem for normal links
 function NavItem({
@@ -116,14 +117,14 @@ export default function BottomNavbar() {
                 activeTab === "profile" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
-              <User />
+              <Settings />
             </div>
             <span
               className={`text-xs ${
                 activeTab === "profile" ? "text-[#7FC354]" : "text-gray-500 dark:text-gray-400"
               } group-hover:text-[#7FC354]`}
             >
-              Profile
+              Settings
             </span>
           </button>
         </div>
@@ -131,32 +132,51 @@ export default function BottomNavbar() {
 
       {/* 🔹 SHEET FOR CART */}
       <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-        <SheetContent side="right" className="w-[350px] sm:w-[400px]">
-          <SheetHeader>
+        {/* Adjusted content for full height and scrollability */}
+        <SheetContent side="right" className="w-[350px] sm:w-[400px] flex flex-col">
+          <SheetHeader className="p-4">
             <SheetTitle>Your Cart</SheetTitle>
             <SheetDescription>
               Items you added will appear here.
             </SheetDescription>
           </SheetHeader>
 
-          <div className="border-gray-500 h-full w-[90%] border-2 rounded-md ml-6 flex">
-            <div className="w-full">
-              <CartItems />
-              </div>
+          {/* Scrollable Cart Items */}
+          <div className="flex-1 overflow-y-auto px-4">
+            {/* Removed the extra border div for better layout control */}
+            <CartItems />
+          </div>
+
+          {/* Checkout Button - Fixed at the bottom */}
+          <div className="p-4 border-t dark:border-gray-700">
+            <Link 
+              href="/customerPage/cart" 
+              className="w-full" 
+              onClick={() => setCartOpen(false)} // Close sheet on navigation
+            >
+              <Button className="w-full bg-[#7FC354] hover:bg-[#6AA447] text-white font-bold py-2 px-4 rounded">
+                Proceed to Checkout
+              </Button>
+            </Link>
           </div>
         </SheetContent>
       </Sheet>
 
       {/* 🔹 SHEET FOR PROFILE */}
-      <Sheet open={profileOpen} onOpenChange={setProfileOpen}>
+      {/* ... Profile Sheet code remains the same ... */}
+       <Sheet open={profileOpen} onOpenChange={setProfileOpen}>
         <SheetContent
           side="right"
           className="w-[350px] sm:w-[400px] overflow-y-auto"
         >
           {/* HEADER */}
           <SheetHeader className="p-4">
-            <SheetTitle className="text-xl font-bold">
-              Juan Dela Cruz
+            <SheetTitle className="text-xl font-bold flex items-center gap-2">
+              <span>Juan Dela Cruz</span>
+
+              <span className="bg-[#D4AF37] text-white text-[10px] font-bold px-2 py-0.5 rounded-md mt-1">
+                Gold
+              </span>
             </SheetTitle>
             <Link
               href={"/customerPage/accounts"}
@@ -180,20 +200,22 @@ export default function BottomNavbar() {
 
           {/* QUICK ACTIONS */}
           <div className="grid grid-cols-3 gap-3 px-4 mb-4">
-            <Link href="/customerPage/order" className="border rounded-lg p-4 flex flex-col items-center">
-              <ReceiptText className="mb-1" />
+            <Button variant="ghost" className="border rounded-lg p-4 flex flex-col items-center h-20">
+            <Link href="/customerPage/order" className="flex flex-col items-center">
+              <ReceiptText className="mb-3.5" />
               <span className="text-sm">Orders</span>
             </Link>
+            </Button>
 
-            <button className="border rounded-lg p-4 flex flex-col items-center">
+            <Button variant="ghost" className="border rounded-lg p-4 flex flex-col items-center h-20">
               <User className="mb-1" />
               <span className="text-sm">Favourites</span>
-            </button>
+            </Button>
 
-            <button className="border rounded-lg p-4 flex flex-col items-center">
+            <Button variant="ghost" className="border rounded-lg p-4 flex flex-col items-center h-20">
               <Home className="mb-1" />
               <span className="text-sm">Addresses</span>
-            </button>
+            </Button>
           </div>
 
           {/* PERKS SECTION */}
@@ -201,29 +223,31 @@ export default function BottomNavbar() {
             <h2 className="font-semibold text-gray-700 mb-2">Perks for you</h2>
 
             <div className="space-y-3">
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <Crown /> Try Merkapro for free now
                 </span>
-              </button>
+              </Button>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <Receipt /> MerkGo rewards
                 </span>
-              </button>
+              </Button>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
+                <Link href="/customerPage/voucher">
                 <span className="flex items-center gap-2">
                   <Ticket /> Vouchers
                 </span>
-              </button>
+                </Link>
+              </Button>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <User /> Invite friends
                 </span>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -234,8 +258,8 @@ export default function BottomNavbar() {
             <div className="space-y-3">
               {/* Dark Mode Toggle */}
               <div className="w-full flex justify-between items-center py-3 border-b">
-                <span className="flex items-center gap-2">
-                  {isDarkMode ? <Moon /> : <Sun />}
+                <span className="flex ml-3.5 items-center gap-2 font-semibold">
+                  {isDarkMode ? <Moon size={20}/> : <Sun size={20}/>}
                   Dark Mode
                 </span>
                 <Switch 
@@ -244,23 +268,23 @@ export default function BottomNavbar() {
                 />
               </div>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <CircleQuestionMark /> Help center
                 </span>
-              </button>
+              </Button>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <Home /> MerkaGo for business
                 </span>
-              </button>
+              </Button>
 
-              <button className="w-full flex justify-between items-center py-3 border-b">
+              <Button variant="ghost" className="w-full flex justify-between items-center py-3 border-b">
                 <span className="flex items-center gap-2">
                   <Handshake /> Terms & policies
                 </span>
-              </button>
+              </Button>
             </div>
           </div>
 
