@@ -1,6 +1,6 @@
 "use client";
 
-import { StarIcon, ChevronRight } from 'lucide-react';
+import { StarIcon, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardFooter, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -144,6 +144,40 @@ export default function CustomerFeedback() {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [canScrollLeft, setCanScrollLeft] = useState(false);
+	const [canScrollRight, setCanScrollRight] = useState(false);
+
+	const updateScrollButtons = () => {
+		const container = scrollContainerRef.current;
+		if (!container) return;
+
+		setCanScrollLeft(container.scrollLeft > 5);
+		setCanScrollRight(
+			container.scrollLeft < container.scrollWidth - container.clientWidth - 5
+		);
+	};
+
+	const handleScrollRight = () => {
+		const container = scrollContainerRef.current;
+		if (!container) return;
+
+		const cardWidth = container.offsetWidth;
+		container.scrollBy({
+			left: cardWidth,
+			behavior: 'smooth'
+		});
+	};
+
+	const handleScrollLeft = () => {
+		const container = scrollContainerRef.current;
+		if (!container) return;
+
+		const cardWidth = container.offsetWidth;
+		container.scrollBy({
+			left: -cardWidth,
+			behavior: 'smooth'
+		});
+	};
 
 	useEffect(() => {
 		// Simulate loading delay
@@ -158,7 +192,11 @@ export default function CustomerFeedback() {
 		const container = scrollContainerRef.current;
 		if (!container || isLoading) return;
 
+		updateScrollButtons();
+
 		const handleScroll = () => {
+			updateScrollButtons();
+
 			// Clear existing timeout
 			if (timeoutRef.current) {
 				clearTimeout(timeoutRef.current);
@@ -181,7 +219,7 @@ export default function CustomerFeedback() {
 				clearTimeout(timeoutRef.current);
 			}
 		};
-	}, []);
+	}, [isLoading]);
 
 	return (
 		<div className='w-full p-4 space-y-4'>
@@ -214,11 +252,27 @@ export default function CustomerFeedback() {
 					)}
 				</div>
 				
-				{/* Swipe Indicator */}
+				{/* Navigation Buttons */}
 				{!isLoading && sortedFeedback.length > 1 && (
-					<div className='absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none'>
-						<ChevronRight size={20} className='text-gray-400 animate-pulse' />
-					</div>
+					<>
+						{/* Left Button */}
+						<button 
+							onClick={handleScrollLeft}
+							className='absolute left-6 top-1/2 -translate-y-1/2 bg-white/40 dark:bg-gray-800/40 rounded-full p-2 shadow-md hover:bg-white/70 hover:dark:bg-gray-800/70 transition-colors'
+							aria-label="Scroll to previous review"
+						>
+							<ChevronLeft size={20} className='text-gray-600 dark:text-gray-400' />
+						</button>
+
+						{/* Right Button */}
+						<button 
+							onClick={handleScrollRight}
+							className='absolute right-6 top-1/2 -translate-y-1/2 bg-white/40 dark:bg-gray-800/40 rounded-full p-2 shadow-md hover:bg-white/70 hover:dark:bg-gray-800/70 transition-colors'
+							aria-label="Scroll to next review"
+						>
+							<ChevronRight size={20} className='text-gray-600 dark:text-gray-400' />
+						</button>
+					</>
 				)}
 			</div>
 		</div>
