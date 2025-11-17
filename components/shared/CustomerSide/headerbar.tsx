@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Define the props our component will accept
 type LocationHeaderProps = {
@@ -13,7 +14,9 @@ export default function LocationHeader({ addressLine1, addressLine2 }: LocationH
 
     {/* 1. Logo Section (NEW) */}
       <div className="shrink-0 relative">
+        <Link href="/customerPage">
          <Image src="/imageAssets/MERKAGOLOGO.svg" alt="MerkaGo" width={70} height={10} />
+         </Link>
       </div>
 
       {/* 2. Location Section (No changes) */}

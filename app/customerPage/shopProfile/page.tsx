@@ -14,6 +14,8 @@ const recommendedProducts = [
     name: "Karne ng Baka",
     price: "₱ 200.00/kg",
     badge: "30% Off",
+    rating: "4.3",
+    sold: "300",
     category: "Meat",
     subCategory: "Beef",
   },
@@ -22,6 +24,8 @@ const recommendedProducts = [
     imageUrl: "/imageAssets/manok.jpg",
     name: "Manok",
     price: "₱ 180.00/kg",
+    rating: "3.3",
+    sold: "400",
     category: "Meat",
     subCategory: "Chicken",
   },
@@ -30,6 +34,8 @@ const recommendedProducts = [
     imageUrl: "/imageAssets/bangus.jpg",
     name: "Bangus",
     price: "₱ 280.00/kg",
+    rating: "4.8",
+    sold: "600",
     category: "Meat",
     subCategory: "Fish",
   },
@@ -38,6 +44,8 @@ const recommendedProducts = [
     imageUrl: "/imageAssets/meat.png",
     name: "Pork",
     price: "₱ 100.00/kg",
+    rating: "3.8",
+    sold: "600",
     category: "Meat",
     subCategory: "Pork",
   },
@@ -72,7 +80,7 @@ export default function ShopPage() {
           </div>
 
           <div className="ml-4 flex-1">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Mang Berto's Choice Cuts</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Mang Berto&apos;s Choice Cuts</h1>
             <p className="text-xs text-gray-500 dark:text-gray-400">Active 10 minutes ago</p>
 
             <div className="flex gap-2 mt-2">
@@ -165,10 +173,11 @@ export default function ShopPage() {
               imageUrl={item.imageUrl}
               name={item.name}
               price={item.price}
+              rating = {item.rating}
+              sold = {item.sold}
               badge={item.badge}
               category={item.category}
-              subCategory={item.subCategory}
-            />
+              subCategory={item.subCategory}            />
           ))}
         </div>
       </div>
