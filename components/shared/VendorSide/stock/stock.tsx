@@ -10,10 +10,37 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Image from "next/image";
-import { Trash2, Plus, X, Pencil, Check, Upload, ChevronDown, ChevronRight } from "lucide-react";
+import { Trash2, Plus, X, Pencil, Check, Upload, ChevronDown, ChevronRight, Crown, Lock, CreditCard, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import AddProductModal from "./addProductModal/addProductModal";
+import AdPlacement from "./adPlacement/adPlacement";
+import PremiumSubscription from "./premiumSubscription/premiumSubscription";
+import AdInsights from "./adInsights/adInsights";
 
 type Product = {
   id: number;
@@ -72,8 +99,22 @@ const ProductRowSkeleton = () => {
   );
 };
 
+interface PaymentMethod {
+  id: string;
+  bank: string;
+  accountNumber: string;
+  cvv: string;
+  expirationDate: string;
+}
+
 export default function StockTable() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showAdPlacementModal, setShowAdPlacementModal] = useState(false);
+  const [showAdConfirmationModal, setShowAdConfirmationModal] = useState(false);
+  const [showAdInsightsModal, setShowAdInsightsModal] = useState(false);
   const [products, setProducts] = useState<Product[]>(
     [
       {
@@ -184,6 +225,24 @@ export default function StockTable() {
 
   const units = ["kg", "g", "pcs", "pack", "bundle", "dozen"];
 
+  // Hardcoded payment methods (same as in sales.tsx)
+  const paymentMethods: PaymentMethod[] = [
+    {
+      id: "1",
+      bank: "BDO",
+      accountNumber: "1234 5678 9012 3456",
+      cvv: "123",
+      expirationDate: "12/25",
+    },
+    {
+      id: "2",
+      bank: "BPI",
+      accountNumber: "9876 5432 1098 7654",
+      cvv: "456",
+      expirationDate: "06/26",
+    },
+  ];
+
   useEffect(() => {
     // Simulate loading delay
     const loadTimeout = setTimeout(() => {
@@ -238,6 +297,11 @@ export default function StockTable() {
     stock: string;
     price: string;
   }) => {
+    // Check if user hit the limit
+    if (!isSubscribed && products.length >= 20) {
+      return; // This shouldn't happen as button is disabled, but extra safety
+    }
+    
     const product: Product = {
       id: products.length + 1,
       name: newProduct.name,
@@ -297,19 +361,79 @@ export default function StockTable() {
     return { amount: price, unit: "" };
   };
 
+  const maskAccountNumber = (number: string) => {
+    const cleaned = number.replace(/\s/g, "");
+    return "•••• •••• •••• " + cleaned.slice(-4);
+  };
+
+  const handleUnlockPremium = () => {
+    if (paymentMethods.length === 0) {
+      toast.error("Please add a payment method first in Settings > Payment Methods");
+      return;
+    }
+    setShowPaymentModal(true);
+  };
+
+  const hasReachedLimit = !isSubscribed && products.length >= 20;
+  const productsRemaining = isSubscribed ? "Unlimited" : Math.max(0, 20 - products.length);
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Products</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Products</h2>
+          {isSubscribed ? (
+            <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-full text-xs font-semibold">
+              <Crown className="size-3" />
+              Premium
+            </div>
+          ) : (
+            <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium">
+              {products.length}/20 products
+            </div>
+          )}
+        </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-[#7FC354] text-white px-4 py-2 rounded-lg hover:bg-[#6fa844] transition-colors"
-          disabled={isLoading}
+          className="flex items-center gap-2 bg-[#7FC354] text-white px-4 py-2 rounded-lg hover:bg-[#6fa844] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isLoading || hasReachedLimit}
         >
           <Plus size={16} />
           <span className="text-xs font-medium">Add Product</span>
         </button>
       </div>
+
+      {/* Upgrade prompt for non-premium users near limit */}
+      {!isSubscribed && products.length >= 15 && (
+        <Card className="mb-4 border-yellow-200 dark:border-yellow-800 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30 shrink-0">
+                {hasReachedLimit ? <Lock className="size-5 text-yellow-600" /> : <Crown className="size-5 text-yellow-600" />}
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                  {hasReachedLimit ? "Product Limit Reached" : "Approaching Product Limit"}
+                </h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  {hasReachedLimit 
+                    ? "You've reached the maximum of 20 products. Upgrade to Premium for unlimited product listings!"
+                    : `You have ${productsRemaining} product slots remaining. Upgrade to Premium for unlimited listings!`
+                  }
+                </p>
+                <Button
+                  size="sm"
+                  className="mt-3 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white h-8 text-xs"
+                  onClick={handleUnlockPremium}
+                >
+                  <Crown className="size-3 mr-1" />
+                  Upgrade to Premium
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-4">
         {isLoading ? (
@@ -555,6 +679,60 @@ export default function StockTable() {
         }
       </div>
 
+      {/* Ad Placement Promotion Card */}
+      <Card className="mt-6 border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Boost Your Business Visibility
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3">
+                Reach more customers with targeted ad placements. Choose from flexible pricing options starting at just ₱200 to ₱1,000 based on your desired audience reach.
+              </p>
+              <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-400 mb-4">
+                <div className="flex items-center gap-1">
+                  <Check className="size-3 text-blue-600 shrink-0" />
+                  <span>500-10,000+ reach</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Check className="size-3 text-blue-600 shrink-0" />
+                  <span>7-30 days duration</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Check className="size-3 text-blue-600 shrink-0" />
+                  <span>Priority placement</span>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <Button
+                  onClick={() => setShowAdPlacementModal(true)}
+                  disabled={isLoading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm w-full sm:w-auto"
+                >
+                  <CreditCard className="size-3 sm:size-4 mr-2" />
+                  <span className="truncate">Buy Ad - ₱200-₱1,000</span>
+                </Button>
+                <Button
+                  onClick={() => setShowAdInsightsModal(true)}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-xs sm:text-sm w-full sm:w-auto"
+                >
+                  <TrendingUp className="size-3 sm:size-4 mr-2" />
+                  <span className="truncate">View Insights</span>
+                </Button>
+              </div>
+            </div>
+            <div className="hidden md:block shrink-0 ml-6">
+              <div className="p-4 rounded-full bg-blue-600">
+                <CreditCard className="size-12 text-white" />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -590,6 +768,29 @@ export default function StockTable() {
         showModal={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAddProduct={handleAddProduct}
+      />
+
+      <AdPlacement
+        showAdPlacementModal={showAdPlacementModal}
+        showAdConfirmationModal={showAdConfirmationModal}
+        onCloseAdPlacement={() => setShowAdPlacementModal(false)}
+        onCloseAdConfirmation={() => setShowAdConfirmationModal(false)}
+        onOpenAdConfirmation={() => setShowAdConfirmationModal(true)}
+        paymentMethods={paymentMethods}
+      />
+
+      <PremiumSubscription
+        showPaymentModal={showPaymentModal}
+        showConfirmationModal={showConfirmationModal}
+        onClosePayment={() => setShowPaymentModal(false)}
+        onCloseConfirmation={() => setShowConfirmationModal(false)}
+        onSubscribeSuccess={() => setIsSubscribed(true)}
+        paymentMethods={paymentMethods}
+      />
+
+      <AdInsights
+        showInsightsModal={showAdInsightsModal}
+        onCloseInsights={() => setShowAdInsightsModal(false)}
       />
     </div>
   );

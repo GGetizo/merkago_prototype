@@ -1,26 +1,13 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -29,67 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-import { useState, useEffect } from "react";
-import { Crown, Lock, CreditCard, Check } from "lucide-react";
+import { Check, Crown, CreditCard } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-
-const salesData = [
-  { month: "Jan", sales: 4000 },
-  { month: "Feb", sales: 3000 },
-  { month: "Mar", sales: 5000 },
-  { month: "Apr", sales: 4500 },
-  { month: "May", sales: 6000 },
-  { month: "Jun", sales: 5500 },
-];
-
-const chartConfig = {
-  sales: {
-    label: "Sales",
-    color: "#7FC354",
-  },
-};
-
-const StatCardSkeleton = () => {
-  return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-3 w-32 mt-2" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-8 w-32 mb-2" />
-        <Skeleton className="h-3 w-28" />
-      </CardContent>
-    </Card>
-  );
-};
-
-const ChartSkeleton = () => {
-  const fixedHeights = [180, 220, 160, 240, 200, 190]; // Fixed heights to prevent hydration mismatch
-  
-  return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-4 w-48 mt-2" />
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full flex items-end justify-around gap-4 px-4">
-          {fixedHeights.map((height, index) => (
-            <div key={index} className="flex-1 flex flex-col items-center gap-2">
-              <Skeleton 
-                className="w-full rounded-t-md" 
-                style={{ height: `${height}px` }}
-              />
-              <Skeleton className="h-3 w-8" />
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
 
 interface PaymentMethod {
   id: string;
@@ -99,61 +28,29 @@ interface PaymentMethod {
   expirationDate: string;
 }
 
-export default function SalesComponent() {
-  const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+interface PremiumSubscriptionProps {
+  showPaymentModal: boolean;
+  showConfirmationModal: boolean;
+  onClosePayment: () => void;
+  onCloseConfirmation: () => void;
+  onSubscribeSuccess: () => void;
+  paymentMethods: PaymentMethod[];
+}
+
+export default function PremiumSubscription({
+  showPaymentModal,
+  showConfirmationModal,
+  onClosePayment,
+  onCloseConfirmation,
+  onSubscribeSuccess,
+  paymentMethods
+}: PremiumSubscriptionProps) {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // Hardcoded payment methods (same as in paymentMethod.tsx)
-  const paymentMethods: PaymentMethod[] = [
-    {
-      id: "1",
-      bank: "BDO",
-      accountNumber: "1234 5678 9012 3456",
-      cvv: "123",
-      expirationDate: "12/25",
-    },
-    {
-      id: "2",
-      bank: "BPI",
-      accountNumber: "9876 5432 1098 7654",
-      cvv: "456",
-      expirationDate: "06/26",
-    },
-  ];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    
-    // Simulate loading delay
-    const loadTimeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(loadTimeout);
-  }, [mounted]);
 
   const maskAccountNumber = (number: string) => {
     const cleaned = number.replace(/\s/g, "");
     return "•••• •••• •••• " + cleaned.slice(-4);
-  };
-
-  const handleUnlockPremium = () => {
-    if (paymentMethods.length === 0) {
-      toast.error("Please add a payment method first in Settings > Payment Methods");
-      return;
-    }
-    setShowPremiumModal(false);
-    setShowPaymentModal(true);
   };
 
   const handleProceedToConfirmation = () => {
@@ -161,8 +58,7 @@ export default function SalesComponent() {
       toast.error("Please select a payment method");
       return;
     }
-    setShowPaymentModal(false);
-    setShowConfirmationModal(true);
+    onClosePayment();
   };
 
   const handleSubscribe = async () => {
@@ -172,164 +68,16 @@ export default function SalesComponent() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     setIsProcessing(false);
-    setShowConfirmationModal(false);
-    setIsSubscribed(true);
+    onCloseConfirmation();
+    setSelectedPaymentMethod("");
+    onSubscribeSuccess();
     toast.success("Successfully subscribed to Premium! 🎉");
   };
 
-  if (!mounted) {
-    return (
-      <div className="w-full p-4 space-y-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Sales Overview</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <StatCardSkeleton />
-          <StatCardSkeleton />
-          <StatCardSkeleton />
-        </div>
-        <ChartSkeleton />
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full p-4 space-y-4 relative">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Sales Overview</h2>
-        {isSubscribed && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-full text-sm font-semibold">
-            <Crown className="size-4" />
-            Premium Member
-          </div>
-        )}
-      </div>
-      
-      {/* Blur overlay for non-subscribers */}
-      {!isSubscribed && (
-        <div className="absolute inset-0 z-50 backdrop-blur-xl bg-white/30 dark:bg-gray-900/30 flex items-center justify-center">
-          <Card className="max-w-md mx-4 shadow-2xl border-2 border-yellow-500">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-4 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full w-20 h-20 flex items-center justify-center">
-                <Crown className="size-10 text-white" />
-              </div>
-              <CardTitle className="text-2xl">Unlock Premium Sales Analytics</CardTitle>
-              <CardDescription className="text-base mt-2">
-                Get detailed insights into your sales performance, revenue tracking, and growth metrics
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <Check className="size-5 text-green-600 shrink-0" />
-                  <span>Real-time sales dashboard</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Check className="size-5 text-green-600 shrink-0" />
-                  <span>Monthly revenue charts</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Check className="size-5 text-green-600 shrink-0" />
-                  <span>Order statistics and trends</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Check className="size-5 text-green-600 shrink-0" />
-                  <span>Performance metrics</span>
-                </div>
-              </div>
-
-              <div className="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Premium Subscription</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">₱500<span className="text-lg text-gray-500">/month</span></p>
-                </div>
-              </div>
-
-              <Button 
-                onClick={handleUnlockPremium}
-                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-semibold text-base h-12"
-              >
-                <Lock className="size-5 mr-2" />
-                Unlock Premium Access
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {isLoading ? (
-          <>
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-          </>
-        ) : (
-          <>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Total Sales</CardTitle>
-                <CardDescription>Monthly Revenue</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₱28,000</div>
-                <p className="text-xs text-muted-foreground">
-                  +12% from last month
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Orders</CardTitle>
-                <CardDescription>Total Orders</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">245</div>
-                <p className="text-xs text-muted-foreground">
-                  +8% from last month
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Average Order</CardTitle>
-                <CardDescription>Per Transaction</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₱114</div>
-                <p className="text-xs text-muted-foreground">
-                  +3% from last month
-                </p>
-              </CardContent>
-            </Card>
-          </>
-        )}
-      </div>
-
-      {isLoading ? (
-        <ChartSkeleton />
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>Sales Chart</CardTitle>
-            <CardDescription>Monthly sales performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
-              <BarChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="sales" fill="var(--color-sales)" />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-      )}
-
+    <>
       {/* Payment Selection Modal */}
-      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+      <Dialog open={showPaymentModal} onOpenChange={onClosePayment}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
@@ -394,7 +142,7 @@ export default function SalesComponent() {
             <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
-                onClick={() => setShowPaymentModal(false)}
+                onClick={onClosePayment}
                 disabled={isProcessing}
                 className="flex-1"
               >
@@ -414,7 +162,7 @@ export default function SalesComponent() {
       </Dialog>
 
       {/* Confirmation Modal */}
-      <Dialog open={showConfirmationModal} onOpenChange={setShowConfirmationModal}>
+      <Dialog open={showConfirmationModal} onOpenChange={onCloseConfirmation}>
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
@@ -488,8 +236,7 @@ export default function SalesComponent() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setShowConfirmationModal(false);
-                  setShowPaymentModal(true);
+                  onCloseConfirmation();
                 }}
                 disabled={isProcessing}
                 className="flex-1"
@@ -517,6 +264,6 @@ export default function SalesComponent() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
