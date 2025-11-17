@@ -111,16 +111,16 @@ export default function OrderPage() {
   );
 
   return (
-    <div className="bg-gray-100 min-h-screen w-full pb-16">
+    <div className="bg-gray-100 dark:bg-gray-900 min-h-screen w-full pb-16">
       {/* HEADER */}
-      <div className="bg-white p-4 shadow-sm">
-        <h1 className="text-xl font-bold text-center text-gray-900">
+      <div className="bg-white dark:bg-gray-800 p-4 shadow-sm">
+        <h1 className="text-xl font-bold text-center text-gray-900 dark:text-gray-100">
           My Orders
         </h1>
       </div>
 
       {/* STICKY TAB NAVIGATION */}
-      <div className="flex justify-around bg-white shadow-md sticky top-0 z-10 text-sm font-medium text-center text-gray-500">
+      <div className="flex justify-around bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10 text-sm font-medium text-center text-gray-500 dark:text-gray-400">
         {/* Map over the TABS array to create buttons dynamically */}
         {TABS.map((tabName) => (
           <button
@@ -129,7 +129,7 @@ export default function OrderPage() {
             className={`flex-1 py-3 px-2 ${
               activeTab === tabName // Compare with state
                 ? "text-green-600 border-b-2 border-green-600"
-                : "hover:text-gray-700"
+                : "hover:text-gray-700 dark:hover:text-gray-300"
             }`}
           >
             {tabName}
@@ -145,17 +145,17 @@ export default function OrderPage() {
           filteredOrders.map((order) => (
             <div
               key={order.id}
-              className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden"
             >
               {/* Card Header: Shop Name & Order ID */}
-              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Store className="w-5 h-5 text-gray-700" />
-                  <h2 className="font-semibold text-gray-800">
+                  <Store className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                  <h2 className="font-semibold text-gray-800 dark:text-gray-200">
                     {order.shopName}
                   </h2>
                 </div>
-                <span className="text-xs text-gray-500">#{order.id}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">#{order.id}</span>
               </div>
 
               {/* Card Body: Product(s) List */}
@@ -167,17 +167,17 @@ export default function OrderPage() {
                       alt={product.name}
                       width={65}
                       height={65}
-                      className="rounded-md object-cover border border-gray-200"
+                      className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {product.name}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         Qty: {product.qty}
                       </p>
                     </div>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                       ₱{product.price.toFixed(2)}
                     </p>
                   </div>
@@ -185,23 +185,23 @@ export default function OrderPage() {
               </div>
 
               {/* Order Status */}
-              <div className="px-4 py-3 bg-gray-50 border-t border-b border-gray-200">
+              <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2">
                   {order.statusIcon}
-                  <p className="text-sm font-medium text-gray-800">
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                     {order.statusText}
                   </p>
                 </div>
               </div>
 
               {/* Card Footer: Total & Actions */}
-              <div className="p-4 bg-white">
+              <div className="p-4 bg-white dark:bg-gray-800">
                 {/* Total Price */}
                 <div className="text-right mb-4">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {order.totalItems} item(s)
                   </p>
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
                     Order Total:{" "}
                     <span className="text-green-600">
                       ₱{order.totalPrice.toFixed(2)}
@@ -217,7 +217,7 @@ export default function OrderPage() {
                       className={`px-4 py-2 rounded-lg text-sm font-medium ${
                         action.type === "primary"
                           ? "bg-green-600 text-white shadow-sm hover:bg-green-700"
-                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                          : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
                       }`}
                     >
                       {action.label}
@@ -230,7 +230,7 @@ export default function OrderPage() {
         ) : (
           // --- EMPTY STATE ---
           // Show a message if no orders match the filter
-          <div className="text-center text-gray-500 pt-16">
+          <div className="text-center text-gray-500 dark:text-gray-400 pt-16">
             <p>No orders found for this category.</p>
           </div>
         )}
