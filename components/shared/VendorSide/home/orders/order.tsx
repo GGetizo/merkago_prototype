@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ArrowRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -155,64 +156,72 @@ export default function OrdersComponent() {
       <Card>
         <CardHeader>
           <CardTitle>All Orders</CardTitle>
-          <CardDescription>Manage and update order statuses</CardDescription>
+          <CardDescription className="flex items-center gap-1">
+            Manage and update order statuses
+            <span className="text-muted-foreground/60 flex items-center gap-1 ml-2">
+              <ArrowRight className="size-3" />
+              Scroll to view all
+            </span>
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs">Customer</TableHead>
-                <TableHead className="text-xs">Items</TableHead>
-                <TableHead className="text-xs">Notes</TableHead>
-                <TableHead className="text-xs">Total</TableHead>
-                <TableHead className="text-xs">Time</TableHead>
-                <TableHead className="text-xs">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <OrderTableSkeleton />
-              ) : (
-                orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="text-xs">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="ring-[#7FC354] ring-2 w-8 h-8">
-                        <AvatarImage src={order.customerAvatar} alt={order.customerName} />
-                        <AvatarFallback className="text-xs">
-                          {order.customerName.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="font-medium">{order.customerName}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs max-w-xs truncate">{order.items}</TableCell>
-                  <TableCell className="text-xs max-w-xs">
-                    {order.notes ? (
-                      <span className="italic text-gray-600 dark:text-gray-400">&quot;{order.notes}&quot;</span>
-                    ) : (
-                      <span className="text-gray-400 dark:text-gray-500">No notes</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-xs font-semibold">{order.total}</TableCell>
-                  <TableCell className="text-xs text-gray-600 dark:text-gray-400">{order.time}</TableCell>
-                  <TableCell className="text-xs">
-                    <select
-                      value={order.status}
-                      onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#7FC354] ${statusColors[order.status]}`}
-                    >
-                      <option value="Preparing">Preparing</option>
-                      <option value="On the Way">On the Way</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Refunded">Refunded</option>
-                    </select>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs">Customer</TableHead>
+                  <TableHead className="text-xs">Items</TableHead>
+                  <TableHead className="text-xs">Notes</TableHead>
+                  <TableHead className="text-xs">Total</TableHead>
+                  <TableHead className="text-xs">Time</TableHead>
+                  <TableHead className="text-xs">Status</TableHead>
                 </TableRow>
-              )))
-              }
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <OrderTableSkeleton />
+                ) : (
+                  orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="text-xs">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="ring-[#7FC354] ring-2 w-8 h-8">
+                          <AvatarImage src={order.customerAvatar} alt={order.customerName} />
+                          <AvatarFallback className="text-xs">
+                            {order.customerName.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium">{order.customerName}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-xs max-w-xs truncate">{order.items}</TableCell>
+                    <TableCell className="text-xs max-w-xs">
+                      {order.notes ? (
+                        <span className="italic text-gray-600 dark:text-gray-400">&quot;{order.notes}&quot;</span>
+                      ) : (
+                        <span className="text-gray-400 dark:text-gray-500">No notes</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-xs font-semibold">{order.total}</TableCell>
+                    <TableCell className="text-xs text-gray-600 dark:text-gray-400">{order.time}</TableCell>
+                    <TableCell className="text-xs">
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#7FC354] ${statusColors[order.status]}`}
+                      >
+                        <option value="Preparing">Preparing</option>
+                        <option value="On the Way">On the Way</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Refunded">Refunded</option>
+                      </select>
+                    </TableCell>
+                  </TableRow>
+                )))
+                }
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
       

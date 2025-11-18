@@ -625,7 +625,16 @@ export default function SettingsComponent() {
                 </div>
                 <ChevronRight className="size-4" />
               </Button>
-              <Button variant="destructive" className="w-full">
+              <Button 
+                variant="destructive" 
+                className="w-full"
+                onClick={() => {
+                  toast.success("Logged out successfully!");
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 1000);
+                }}
+              >
                 Log Out
               </Button>
             </CardContent>
